@@ -1,0 +1,262 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  /* Light Theme Color Palette */
+  --primary-color: #5B4EF5;
+  --primary-gradient: linear-gradient(135deg, #5B4EF5 0%, #764ba2 100%);
+  --accent-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  
+  --bg-primary: #f8faff; /* Very light blue-ish grey background for main page */
+  --bg-secondary: #ffffff; /* White for cards/containers */
+  --bg-hover: #f1f5f9;
+  
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --text-muted: #94a3b8;
+  
+  --border-color: #e2e8f0;
+  
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  overflow-x: hidden;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.4s ease-out;
+}
+
+/* Utils */
+.gradient-text {
+  background: var(--primary-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Ant Design Global Overrides for Light Theme */
+.ant-layout {
+  background: var(--bg-primary) !important;
+}
+
+.ant-layout-header {
+  background: #ffffff !important;
+  border-bottom: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Card overrides */
+.ant-card {
+  background: #ffffff !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 12px !important;
+  box-shadow: var(--shadow-sm);
+}
+
+.ant-card-bordered {
+  border: 1px solid var(--border-color) !important;
+}
+
+/* Typography Overrides to ensure legibility */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text-primary) !important;
+}
+
+.ant-typography {
+  color: var(--text-primary);
+}
+
+.ant-typography-secondary {
+  color: var(--text-secondary) !important;
+}
+
+/* Dragger Overrides to match Figma */
+.custom-dragger {
+  background: #ffffff !important;
+  border-radius: 12px !important;
+  transition: all 0.3s ease;
+}
+
+.custom-dragger:hover {
+  background: #f8faff !important;
+  border-color: #4c40d0 !important;
+}
+
+/* Table Overrides */
+.ant-table {
+  background: transparent !important;
+}
+
+.ant-table-thead > tr > th {
+  background: #f8fafc !important;
+  color: var(--text-secondary) !important;
+  font-weight: 600 !important;
+  border-bottom: 1px solid var(--border-color) !important;
+}
+
+.ant-table-tbody > tr > td {
+  border-bottom: 1px solid var(--border-color) !important;
+  /* Enforce vertical centering for all table cells */
+  vertical-align: middle !important;
+}
+
+.ant-table-tbody > tr:hover > td {
+  background: #f1f5f9 !important;
+}
+
+/* Modal Overrides */
+.ant-modal-content {
+  background: #ffffff !important;
+  border-radius: 12px !important;
+}
+
+
+/* Navbar Styles */
+.nav-item {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 0 4px !important; /* Reduced padding, rely on gap */
+  border-radius: 0 !important;
+  cursor: pointer !important;
+  color: #64748b !important;
+  transition: color 0.3s ease !important;
+  font-weight: 600 !important;
+  font-size: 16px !important;
+  letter-spacing: -0.01em !important;
+  height: 40px !important;
+  position: relative !important;
+  background: transparent !important;
+}
+
+/* Animated Underline */
+.nav-item::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0%;
+  height: 2px;
+  background-color: #5B4EF5;
+  transition: width 0.3s ease-in-out;
+}
+
+.nav-item:hover {
+  background-color: transparent !important;
+  color: #5B4EF5 !important;
+}
+
+.nav-item:hover::after {
+  width: 100%;
+}
+
+.nav-item.active {
+  background-color: transparent !important;
+  color: #5B4EF5 !important;
+  box-shadow: none !important;
+}
+
+.nav-item.active::after {
+  width: 100%;
+}
+
+
+/* Custom Bank Select Overrides */
+.custom-bank-select .ant-select-selector {
+  height: 50px !important;
+  display: flex !important;
+  align-items: center !important;
+  font-size: 16px !important;
+}
+
+.custom-bank-select .ant-select-selection-item {
+  display: flex !important;
+  align-items: center !important;
+}
+
+.custom-bank-select .ant-select-selection-placeholder {
+  display: flex !important;
+  align-items: center !important;
+  font-size: 16px !important;
+}
+
+/* Custom Table Font Overrides */
+.custom-table-spacing .ant-table-cell {
+  font-size: 14px !important;
+  font-weight: 500;
+}
+
+
+/* Global Popover / Dropdown z-index fix for Full Screen mode */
+.ant-select-dropdown, 
+.ant-picker-dropdown, 
+.ant-popover, 
+.ant-tooltip,
+.ant-message {
+  z-index: 3000 !important;
+}
+
+.ant-modal-mask,
+.ant-modal-wrap {
+  z-index: 2500 !important;
+}
+
+.custom-table-spacing .ant-table-thead > tr > th {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+}
