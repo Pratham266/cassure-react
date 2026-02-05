@@ -6,7 +6,6 @@ import {
   TransactionOutlined,
   UserOutlined,
   LogoutOutlined,
-  BankOutlined,
   QuestionCircleOutlined
 } from '@ant-design/icons';
 import { useAuth } from '../context/AuthContext';
@@ -106,27 +105,17 @@ const Navbar = () => {
           <div style={{ 
             display: 'flex', 
             alignItems: 'center', 
-            gap: '8px', 
             cursor: 'pointer' 
           }} onClick={() => navigate('/')}>
-             <div style={{
-               width: '24px',
-               height: '24px',
-               display: 'flex',
-               alignItems: 'center',
-               justifyContent: 'center',
-               color: '#5B4EF5'
-             }}>
-               <BankOutlined style={{ fontSize: '20px' }} />
-             </div>
-             <span style={{ 
-               fontWeight: 600, 
-               fontSize: '18px', 
-               color: '#1A1A1A',
+             <div style={{ 
+               fontSize: '24px', 
+               fontWeight: 800, 
+               letterSpacing: '-0.03em',
                fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial'
              }}>
-               caassure
-             </span>
+               <span style={{ color: '#1e293b' }}>CA</span>
+               <span style={{ color: '#5B4EF5' }}>assure</span>
+             </div>
           </div>
 
           {/* Navigation Links */}
