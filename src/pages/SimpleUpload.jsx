@@ -266,7 +266,7 @@ const SimpleUpload = () => {
         try {
           const token = localStorage.getItem('token');
           const response = await axios.post(
-            `${API_URL}simple/process`,
+            `${API_URL}/simple/process`,
             formData,
             {
               headers: {
