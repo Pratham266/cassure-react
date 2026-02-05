@@ -806,21 +806,101 @@ const SimpleUpload = () => {
   };
 
   return (
-    <div style={{ padding: '40px', maxWidth: '100%', margin: '0 auto', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto' }}>
+    <div style={{ padding: '20px 40px', maxWidth: '100%', margin: '0 auto', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto' }}>
+      <style>
+        {`
+          @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+          }
+          .animate-point {
+            animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+          }
+        `}
+      </style>
       
       {/* Upload Section - Hidden when results are shown */}
       {!result && (
         <>
-         
+        <div style={{ textAlign: 'center', marginBottom: '32px', maxWidth: '1000px', margin: '0 auto 32px auto' }}>
+            <h1 style={{ 
+              fontSize: '40px', 
+              fontWeight: 950, 
+              color: '#0f172a', 
+              marginBottom: '8px',
+              lineHeight: '1.05',
+              letterSpacing: '-0.05em'
+            }}>
+              Convert PDF Bank Statement
+            </h1>
+            <h2 style={{ 
+              fontSize: '32px', 
+              fontWeight: 800, 
+              color: '#0ea5e9', 
+              marginBottom: '32px',
+              marginTop: '0'
+            }}>
+              Into Tally XML or Excel
+            </h2>
 
-          <div style={{ background: '#ffffff', border: '1px solid #E0E0E0', borderRadius: '8px', overflow: 'hidden' }}>
+            <div style={{ 
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '8px',
+              maxWidth: '800px',
+              margin: '0 auto',
+              textAlign: 'left'
+            }}>
+              {[
+                "Please use original, bank-issued PDF statements and include all pages for optimal accuracy.",
+                "If your file is protected, please keep the password active; our system handles encrypted files securely.",
+                "Digital PDF formats are required. Scanned documents or images are not supported at this time."
+              ].map((text, i) => (
+                <div 
+                  key={i}
+                  className="animate-point"
+                  style={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    gap: '16px',
+                    padding: '12px 20px',
+                    background: 'white',
+                    border: '1px solid #fee2e2',
+                    borderLeft: '4px solid #ef4444',
+                    borderRadius: '10px',
+                    color: '#475569',
+                    fontSize: '14px',
+                    fontWeight: 500,
+                    animationDelay: `${i * 0.15}s`,
+                    opacity: 0,
+                    boxShadow: '0 2px 10px rgba(239, 68, 68, 0.04)'
+                  }}
+                >
+                  <div style={{
+                    minWidth: '24px',
+                    height: '24px',
+                    background: '#ef4444',
+                    color: 'white',
+                    borderRadius: '50%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '12px',
+                    fontWeight: 800
+                  }}>{i + 1}</div>
+                  {text}
+                </div>
+              ))}
+            </div>
+          </div>
+          <div style={{ background: '#ffffff', border: '1px solid #E0E0E0', borderRadius: '12px', overflow: 'hidden', marginBottom: '32px' }}>
              <div style={{ padding: '24px' }}>
                 <div style={{ marginBottom: '24px' }}>
-                  <Text strong style={{ display: 'block', marginBottom: '8px', color: '#333' }}>Select Bank Format</Text>
+                  <Text strong style={{ display: 'block', marginBottom: '8px', color: '#1A1A1A', fontSize: '15px' }}>Select Bank Format</Text>
                   <Select
-                    style={{ width: '100%', height: '50px' }}
+                    style={{ width: '100%', height: '48px' }}
                     size="large"
-                    placeholder="Select Bank to Enable Upload"
+                    placeholder="Choose your bank to start"
                     value={selectedBank}
                     onChange={setSelectedBank}
                     allowClear
@@ -829,9 +909,9 @@ const SimpleUpload = () => {
                     getPopupContainer={() => containerRef.current || document.body}
                   >
                     {bankOptions.map(bank => (
-                      <Option key={bank} value={bank} style={{ padding: '12px 24px' }}>
-                        <Space style={{ fontSize: '16px', fontWeight: 500 }}>
-                          <BankOutlined style={{ fontSize: '18px', color: '#5B4EF5' }} />
+                      <Option key={bank} value={bank} style={{ padding: '10px 20px' }}>
+                        <Space style={{ fontSize: '15px', fontWeight: 500 }}>
+                          <BankOutlined style={{ fontSize: '16px', color: '#0ea5e9' }} />
                           {bank}
                         </Space>
                       </Option>
@@ -842,16 +922,16 @@ const SimpleUpload = () => {
                 {!selectedBank && (
                   <div style={{ 
                     textAlign: 'center', 
-                    padding: '40px 24px', 
-                    background: '#f8f9fa', 
-                    borderRadius: '12px', 
-                    color: '#555',
-                    marginBottom: '16px',
-                    border: '2px dashed #d9d9d9'
+                    padding: '40px 20px', 
+                    background: '#f8fafc', 
+                    borderRadius: '16px', 
+                    color: '#64748b',
+                    marginBottom: '8px',
+                    border: '2px dashed #e2e8f0'
                   }}>
-                    <BankOutlined style={{ fontSize: '32px', marginBottom: '16px', color: '#8c8c8c' }} />
-                    <p style={{ fontSize: '18px', fontWeight: 500, margin: 0, color: '#444' }}>
-                      Please select a specific bank format from the dropdown above to enable file upload.
+                    <BankOutlined style={{ fontSize: '32px', marginBottom: '16px', color: '#94a3b8' }} />
+                    <p style={{ fontSize: '17px', fontWeight: 500, margin: 0, color: '#475569' }}>
+                      Please select a bank format to enable file processing.
                     </p>
                   </div>
                 )}
@@ -861,26 +941,23 @@ const SimpleUpload = () => {
                   {...uploadProps} 
                   disabled={uploading || !selectedBank}
                   style={{
-                    background: '#F9F9FF', // Very subtle blue tint
-                    border: '2px dashed #5B4EF5', // More defined dashed border matching theme
-                    borderRadius: '12px',
-                    padding: '32px 0',
-                    transition: 'all 0.3s ease',
-                    overflow: 'hidden', // Fix for potential border artifacts
-                    position: 'relative'
+                    background: '#f0f9ff',
+                    border: '2px dashed #0369a1',
+                    borderRadius: '16px',
+                    padding: '24px 0',
+                    transition: 'all 0.3s ease'
                   }}
                   className="custom-dragger"
-                  // Add hover styles via class if needed, or rely on AntD defaults with override
                 >
-                   <div style={{ padding: '16px 0' }}>
+                   <div style={{ padding: '12px 0' }}>
                      <p className="ant-upload-drag-icon">
-                        <InboxOutlined style={{ fontSize: '56px', color: '#5B4EF5' }} />
+                        <InboxOutlined style={{ fontSize: '48px', color: '#0ea5e9' }} />
                      </p>
-                     <p className="ant-upload-text" style={{ fontSize: '18px', fontWeight: 600, color: '#2b2b2b', marginTop: '24px', fontFamily: '"Segoe UI", Roboto, "Helvetica Neue", Arial' }}>
-                       Click or drag PDF file to upload
+                     <p className="ant-upload-text" style={{ fontSize: '18px', fontWeight: 700, color: '#0f172a', marginTop: '16px' }}>
+                       Drop your PDF here OR click to browse
                      </p>
-                     <p className="ant-upload-hint" style={{ fontSize: '14px', color: '#8c8c8c', marginTop: '8px' }}>
-                       Supports securely encrypted PDF files up to 50MB
+                     <p className="ant-upload-hint" style={{ fontSize: '14px', color: '#64748b', marginTop: '6px' }}>
+                       Secure processing for bank PDFs up to 50MB
                      </p>
                    </div>
                 </Dragger>
@@ -888,56 +965,22 @@ const SimpleUpload = () => {
 
                 {uploading && (
                   <div style={{ marginTop: '24px' }}>
-                    <Text type="secondary">Processing Document...</Text>
+                    <Text type="secondary" style={{ fontSize: '13px', marginBottom: '4px', display: 'block' }}>Analyzing Document In Real-Time...</Text>
                     <Progress 
                       percent={uploadProgress} 
                       status="active"
                       strokeColor={{
-                        '0%': '#5B4EF5',
-                        '100%': '#764ba2',
+                        '0%': '#0ea5e9',
+                        '100%': '#0369a1',
                       }}
+                      strokeWidth={8}
                     />
                   </div>
                 )}
              </div>
           </div>
-           <div style={{ textAlign: 'center', marginBottom: '48px', maxWidth: '900px', margin: '0 auto 48px auto' }}>
-            <h1 style={{ 
-              fontSize: '42px', 
-              fontWeight: 800, 
-              color: '#334155', 
-              marginBottom: '24px',
-              lineHeight: '1.2',
-              letterSpacing: '-0.02em',
-              marginTop:'40px'
-            }}>
-              Convert PDF Bank Statement <br /> 
-              Into <span style={{ color: '#008ECC' }}>Tally XML</span> or <span style={{ color: '#008ECC' }}>Excel</span>
-            </h1>
-            <div style={{ 
-              display: 'inline-flex', 
-              flexDirection: 'column',
-              alignItems: 'flex-start',
-              textAlign: 'left', 
-              color: '#ff4d4f', 
-              fontSize: '16px', 
-              fontWeight: 600, 
-              lineHeight: '1.8' 
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <span style={{ fontSize: '24px', lineHeight: 1 }}>•</span>
-                <span>Only upload bank-generated PDF (do not remove any pages).</span>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <span style={{ fontSize: '24px', lineHeight: 1 }}>•</span>
-                <span>Do not remove the statement password.</span>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <span style={{ fontSize: '24px', lineHeight: 1 }}>•</span>
-                <span>Scanned copies are not allowed.</span>
-              </div>
-            </div>
-          </div>
+
+          
         </>
       )}
 

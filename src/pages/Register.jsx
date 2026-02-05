@@ -173,6 +173,9 @@ const Register = () => {
                 Sign in
               </Link>
             </Text>
+            <div style={{ marginTop: '12px', opacity: 0.5, fontSize: '12px' }}>
+              Created by <a href="https://quantumcusp.co" target="_blank" style={{ color: 'inherit', fontWeight: 600 }}>quantumcusp.co</a>
+            </div>
           </div>
         </Form>
       </Card>
