@@ -128,7 +128,7 @@ const Billing = () => {
             description={
               <div style={{ marginTop: '8px' }}>
                 <Paragraph style={{ color: '#002766', fontSize: '14px', lineHeight: '1.6' }}>
-                  The CAssure platform is currently in a strategic **Foundational Testing Phase**. During this period, we are prioritizing system stability, parsing accuracy, and feature refinement to ensure the highest standard of service for our users.
+                  The caassure platform is currently in a strategic **Foundational Testing Phase**. During this period, we are prioritizing system stability, parsing accuracy, and feature refinement to ensure the highest standard of service for our users.
                 </Paragraph>
                 <Paragraph style={{ color: '#002766', fontSize: '14px', lineHeight: '1.6' }}>
                   As an esteemed early adopter, your account is provisioned with our comprehensive **"Enjoy Plan"**, granting you unrestricted access to our unlimited page scanning capabilities at no additional commitment. Your interaction with the platform is essential to our iterative development process.
