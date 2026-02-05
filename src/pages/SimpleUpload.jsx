@@ -42,6 +42,7 @@ import {
 } from '@ant-design/icons';
 import axios from 'axios';
 import moment from 'moment-timezone';
+import { API_URL } from '../utils/api';
 
 const { Title, Text } = Typography;
 const { Dragger } = Upload;
@@ -265,7 +266,7 @@ const SimpleUpload = () => {
         try {
           const token = localStorage.getItem('token');
           const response = await axios.post(
-            'http://localhost:5001/api/simple/process',
+            `${API_URL}simple/process`,
             formData,
             {
               headers: {
@@ -771,7 +772,7 @@ const SimpleUpload = () => {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.post(
-        'http://localhost:5001/api/simple/process',
+        `${API_URL}/simple/process`,
         formData,
         {
           headers: {
