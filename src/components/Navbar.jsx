@@ -105,12 +105,18 @@ const Navbar = () => {
           <div style={{ 
             display: 'flex', 
             alignItems: 'center', 
+            gap: '8px',
             cursor: 'pointer' 
           }} onClick={() => navigate('/')}>
+             <img 
+               src="/caassure-logo.png" 
+               alt="Logo" 
+               style={{ height: '24px', width: 'auto' }} 
+             />
              <div style={{ 
-               fontSize: '24px', 
+               fontSize: '20px', 
                fontWeight: 800, 
-               letterSpacing: '-0.03em',
+               letterSpacing: '-0.02em',
                fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial'
              }}>
                <span style={{ color: '#1e293b' }}>CA</span>

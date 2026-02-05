@@ -43,17 +43,29 @@ const Register = () => {
           padding: '12px'
         }}
       >
-        <div style={{ textAlign: 'center', marginBottom: '24px', marginTop: '0px' }}>
+        <div style={{ textAlign: 'center', marginBottom: '24px' }}>
           <div style={{ 
-            fontSize: '32px', 
-            fontWeight: 800, 
-            letterSpacing: '-0.03em',
-            marginBottom: '0px' 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center', 
+            gap: '12px',
+            marginBottom: '4px'
           }}>
-            <span style={{ color: '#1e293b' }}>CA</span>
-            <span style={{ color: '#5B4EF5' }}>assure</span>
+            <img 
+              src="/caassure-logo.png" 
+              alt="Logo" 
+              style={{ height: '40px', width: 'auto' }} 
+            />
+            <div style={{ 
+              fontSize: '32px', 
+              fontWeight: 800, 
+              letterSpacing: '-0.03em' 
+            }}>
+              <span style={{ color: '#1e293b' }}>CA</span>
+              <span style={{ color: '#5B4EF5' }}>assure</span>
+            </div>
           </div>
-          <Text type="secondary" style={{ fontSize: '14px' }}>
+          <Text type="secondary" style={{ fontSize: '14px', display: 'block' }}>
             Start managing your bank statements with ease
           </Text>
         </div>
