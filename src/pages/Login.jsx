@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Form, Input, Button, Card, Typography, message } from 'antd';
-import { UserOutlined, LockOutlined, BankOutlined } from '@ant-design/icons';
+import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
@@ -30,23 +30,32 @@ const Login = () => {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      background: '#f8faff',
       padding: '20px'
     }}>
       <Card 
-        className="glass"
+        bordered={false}
         style={{
           width: '100%',
-          maxWidth: '450px',
-          boxShadow: '0 20px 60px rgba(0,0,0,0.3)'
+          maxWidth: '440px',
+          boxShadow: '0 10px 40px rgba(0,0,0,0.06)',
+          borderRadius: '16px',
+          padding: '12px'
         }}
       >
-        <div style={{ textAlign: 'center', marginBottom: '32px' }}>
-          <BankOutlined style={{ fontSize: '48px', color: '#667eea' }} />
-          <Title level={2} style={{ marginTop: '16px', marginBottom: '8px', color: 'white' }}>
-            Welcome Back
-          </Title>
-          <Text type="secondary">Sign in to access your bank statements</Text>
+        <div style={{ textAlign: 'center', marginBottom: '24px', marginTop: '0px' }}>
+          <div style={{ 
+            fontSize: '32px', 
+            fontWeight: 800, 
+            letterSpacing: '-0.03em',
+            marginBottom: '0px' 
+          }}>
+            <span style={{ color: '#1e293b' }}>CA</span>
+            <span style={{ color: '#5B4EF5' }}>assure</span>
+          </div>
+          <Text type="secondary" style={{ fontSize: '14px' }}>
+            Sign in to your accounting workspace
+          </Text>
         </div>
 
         <Form
@@ -54,48 +63,62 @@ const Login = () => {
           onFinish={onFinish}
           layout="vertical"
           size="large"
+          requiredMark={false}
         >
           <Form.Item
             name="email"
+            label={<Text strong style={{ fontSize: '13px', color: '#475569' }}>Email Address</Text>}
             rules={[
               { required: true, message: 'Please input your email!' },
               { type: 'email', message: 'Please enter a valid email!' }
             ]}
+            style={{ marginBottom: '16px' }}
           >
             <Input 
-              prefix={<UserOutlined />} 
-              placeholder="Email" 
+              prefix={<UserOutlined style={{ color: '#94a3b8' }} />} 
+              placeholder="name@company.com" 
+              style={{ borderRadius: '8px', height: '44px' }}
             />
           </Form.Item>
 
           <Form.Item
             name="password"
+            label={<Text strong style={{ fontSize: '13px', color: '#475569' }}>Password</Text>}
             rules={[{ required: true, message: 'Please input your password!' }]}
+            style={{ marginBottom: '24px' }}
           >
             <Input.Password
-              prefix={<LockOutlined />}
-              placeholder="Password"
+              prefix={<LockOutlined style={{ color: '#94a3b8' }} />}
+              placeholder="••••••••"
+              style={{ borderRadius: '8px', height: '44px' }}
             />
           </Form.Item>
 
-          <Form.Item>
+          <Form.Item style={{ marginBottom: '16px' }}>
             <Button 
               type="primary" 
               htmlType="submit" 
               block 
               loading={loading}
-              className="btn-gradient"
-              style={{ height: '48px', fontSize: '16px', fontWeight: 600 }}
+              style={{ 
+                height: '52px', 
+                fontSize: '16px', 
+                fontWeight: 700, 
+                borderRadius: '8px',
+                background: '#5B4EF5',
+                border: 'none',
+                boxShadow: '0 4px 12px rgba(91, 78, 245, 0.25)'
+              }}
             >
               Sign In
             </Button>
           </Form.Item>
 
-          <div style={{ textAlign: 'center' }}>
-            <Text type="secondary">
+          <div style={{ textAlign: 'center', marginTop: '24px' }}>
+            <Text type="secondary" style={{ fontSize: '14px' }}>
               Don't have an account?{' '}
-              <Link to="/register" style={{ color: '#667eea', fontWeight: 600 }}>
-                Sign up
+              <Link to="/register" style={{ color: '#5B4EF5', fontWeight: 600 }}>
+                Create account
               </Link>
             </Text>
           </div>
