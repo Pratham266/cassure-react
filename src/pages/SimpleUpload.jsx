@@ -281,7 +281,17 @@ const SimpleUpload = () => {
           );
 
           message.success('Statement processed successfully!');
-          setResult(response.data.data);
+          
+          // NEW: Fetch the full result from the database using the resultId
+          const resultId = response.data.resultId;
+          const resultResponse = await axios.get(
+            `${API_URL}/simple/result/${resultId}`,
+            {
+              headers: { 'Authorization': `Bearer ${token}` }
+            }
+          );
+          
+          setResult(resultResponse.data.data);
           onSuccess(response.data);
           setUploadProgress(0);
           setPasswordModalVisible(false); // Close if open
@@ -787,7 +797,17 @@ const SimpleUpload = () => {
       );
 
       message.success('Statement processed successfully!');
-      setResult(response.data.data);
+      
+      // NEW: Fetch the full result from the database using the resultId
+      const resultId = response.data.resultId;
+      const resultResponse = await axios.get(
+        `${API_URL}/simple/result/${resultId}`,
+        {
+          headers: { 'Authorization': `Bearer ${token}` }
+        }
+      );
+      
+      setResult(resultResponse.data.data);
       setUploadProgress(0);
       setPasswordModalVisible(false);
       setFilePassword('');
