@@ -43,11 +43,13 @@ const Navbar = () => {
     navigate(path);
   };
 
-  const handleUserMenuClick = ({ key }) => {
-    if (key === 'logout') {
-      logout();
-      navigate('/login');
+  const getInitials = (name) => {
+    if (!name) return '??';
+    const parts = name.trim().split(' ');
+    if (parts.length >= 2) {
+      return (parts[0][0] + parts[1][0]).toUpperCase();
     }
+    return name.substring(0, 2).toUpperCase();
   };
 
   const menuItems = [
@@ -63,26 +65,6 @@ const Navbar = () => {
     }
   ];
 
-  const userMenu = {
-    items: [
-      {
-        key: 'profile',
-        icon: <UserOutlined />,
-        label: 'Profile'
-      },
-      {
-        type: 'divider'
-      },
-      {
-        key: 'logout',
-        icon: <LogoutOutlined />,
-        label: 'Logout',
-        danger: true
-      }
-    ],
-    onClick: handleUserMenuClick
-  };
-
   return (
     <>
       <Header 
@@ -96,7 +78,8 @@ const Navbar = () => {
           borderBottom: '1px solid #f0f0f0',
           position: 'sticky',
           top: 0,
-          zIndex: 1000
+          zIndex: 1000,
+          boxShadow: '0 1px 2px rgba(0,0,0,0.03)'
         }}
       >
         {/* Left Side: Logo & Navigation */}
@@ -123,7 +106,7 @@ const Navbar = () => {
                <span style={{ color: '#5B4EF5' }}>assure</span>
              </div>
           </div>
-
+ 
           {/* Navigation Links */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             {menuItems.map(item => {
@@ -141,32 +124,79 @@ const Navbar = () => {
           </div>
         </div>
 
-        {/* Right Side: User Profile & Help icon */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+        {/* Right Side: User Profile & Help icon & Logout */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
           <div 
-            style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+            style={{ 
+              cursor: 'pointer', 
+              display: 'flex', 
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '36px',
+              height: '36px',
+              borderRadius: '8px',
+              transition: 'background 0.2s'
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.background = '#f1f5f9'}
+            onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
             onClick={() => setIsHelpVisible(true)}
           >
             <QuestionCircleOutlined style={{ fontSize: '20px', color: '#64748b' }} />
           </div>
 
-          <Dropdown menu={userMenu} placement="bottomRight">
-            <Space style={{ cursor: 'pointer', gap: '12px' }}>
-               <Avatar 
-                 size="default" 
-                 icon={<UserOutlined />}
-                 style={{ backgroundColor: '#5B4EF5' }}
-               />
-               <span style={{ 
-                 color: '#1A1A1A', 
-                 fontWeight: 500,
-                 fontSize: '14px',
-                 textTransform: 'uppercase'
-               }}>
-                 {user?.name}
-               </span>
-            </Space>
-          </Dropdown>
+          <div style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: '12px',
+            padding: '4px 12px 4px 6px',
+            background: '#f8fafc',
+            borderRadius: '20px',
+            border: '1px solid #e2e8f0',
+            height: '40px'
+          }}>
+             <Avatar 
+               size={30} 
+               style={{ 
+                 backgroundColor: '#5B4EF5',
+                 fontSize: '12px',
+                 fontWeight: 700,
+                 flexShrink: 0
+               }}
+             >
+               {getInitials(user?.name)}
+             </Avatar>
+             <span style={{ 
+               color: '#475569', 
+               fontWeight: 600,
+               fontSize: '13px',
+               maxWidth: '100px',
+               overflow: 'hidden',
+               textOverflow: 'ellipsis',
+               whiteSpace: 'nowrap'
+             }}>
+               {user?.name}
+             </span>
+          </div>
+
+          <Button 
+            type="text" 
+            danger 
+            icon={<LogoutOutlined />}
+            onClick={() => {
+              logout();
+              navigate('/login');
+            }}
+            style={{ 
+              fontWeight: 600,
+              fontSize: '14px',
+              height: '40px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px'
+            }}
+          >
+            Logout
+          </Button>
         </div>
       </Header>
 

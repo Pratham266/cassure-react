@@ -19,7 +19,8 @@ import {
   Form,
   InputNumber,
   DatePicker,
-  ConfigProvider
+  ConfigProvider,
+  Spin
 } from 'antd';
 import { exportToTallyXML } from '../utils/tallyXmlGenerator';
 import { 
@@ -254,95 +255,97 @@ const SimpleUpload = () => {
 
       setUploading(true);
       setResult(null);
-      
-      const processUpload = async (password = null) => {
-        const formData = new FormData();
-        formData.append('statement', file);
-        formData.append('bankName', selectedBank); // Send Bank Name
-        if (password) {
-          formData.append('password', password);
-        }
-
-        try {
-          const token = localStorage.getItem('token');
-          const response = await axios.post(
-            `${API_URL}/simple/process`,
-            formData,
-            {
-              headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'multipart/form-data'
-              },
-              onUploadProgress: (progressEvent) => {
-                const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-                setUploadProgress(percent);
-              }
-            }
-          );
-
-          message.success('Statement processed successfully!');
-          
-          // NEW: Fetch the full result from the database using the resultId
-          const resultId = response.data.resultId;
-          const resultResponse = await axios.get(
-            `${API_URL}/simple/result/${resultId}`,
-            {
-              headers: { 'Authorization': `Bearer ${token}` }
-            }
-          );
-          
-          setResult(resultResponse.data.data);
-          onSuccess(response.data);
-          setUploadProgress(0);
-          setPasswordModalVisible(false); // Close if open
-          setFilePassword('');
-          setPendingFile(null);
-        } catch (error) {
-          // Handle Password Required
-          if (error.response?.status === 422 || (error.response?.data?.message && error.response.data.message.includes("Password"))) {
-             // 422 is better, but sometimes it might come as 500 from python if not handled carefully
-             // We'll rely on our specific error codes if possible, or string matching
-             const errData = error.response?.data || {};
-            //  if (errData.code === 'PASSWORD_REQUIRED') { ... } 
-            // For now, let's assume if it fails initially it might be password? 
-            // Actually, the Python API might throw 500 with "PDFPasswordIncorrect" message.
-            // Let's rely on the previous logic or generic catch.
-          }
-          
-          if (error.response?.status === 422 && error.response?.data?.code === 'PASSWORD_REQUIRED') {
-            setPendingFile(file); // Save file for retry
-            setPasswordModalVisible(true);
-            message.warning('This file is password protected. Please enter the password.');
-            setUploadProgress(0); 
-            onError(new Error('Password Required')); 
-          } 
-          // Handle Invalid Password
-          else if (error.response?.status === 401 && error.response?.data?.code === 'INVALID_PASSWORD') {
-             message.error('Invalid Password. Please try again.');
-             onError(error);
-          }
-           // Handle Python Service Password Error (often 500)
-          else if (error.response?.data?.error && (error.response.data.error.includes("Password") || error.response.data.error.includes("Encrypted"))) {
-             setPendingFile(file);
-             setPasswordModalVisible(true);
-             message.warning('File is password protected.');
-             setUploadProgress(0);
-             onError(new Error('Password Required'));
-          }
-          else {
-            message.error(error.response?.data?.message || 'Processing failed');
-            console.error('Upload error:', error.response?.data);
-            onError(error);
-          }
-          setUploadProgress(0);
-        } finally {
-          setUploading(false);
-        }
-      };
-
-      await processUpload();
+      await processUpload(file);
     },
     showUploadList: false
+  };
+
+  const processUpload = async (fileObject, password = null) => {
+    const formData = new FormData();
+    formData.append('statement', fileObject);
+    formData.append('bankName', selectedBank);
+    if (password) formData.append('password', password);
+
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${API_URL}/simple/process`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        body: formData
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        let errJson;
+        try { errJson = JSON.parse(errorText); } catch (e) { errJson = { message: errorText }; }
+        
+        if (response.status === 422 || (errJson.message && errJson.message.includes("Password"))) {
+            setPendingFile(fileObject);
+            setPasswordModalVisible(true);
+            message.warning('This file is password protected. Please enter the password.');
+            setUploading(false);
+            return;
+        }
+        throw new Error(errJson.message || 'Processing failed');
+      }
+
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = '';
+      let finalizedResult = { transactions: [], documentmetadata: {}, Accuracy: {} };
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split('\n');
+        buffer = lines.pop();
+
+        for (const line of lines) {
+          if (!line.trim()) continue;
+          try {
+            const data = JSON.parse(line);
+            if (data.type === 'metadata') {
+              finalizedResult.documentmetadata = data.documentmetadata;
+              finalizedResult.bank = data.bank;
+              setResult(prev => ({ ...prev, ...finalizedResult }));
+            } 
+            else if (data.type === 'page_data') {
+              finalizedResult.transactions = [...finalizedResult.transactions, ...(data.transactions || [])];
+              setResult(prev => ({
+                ...prev,
+                transactions: finalizedResult.transactions,
+                documentmetadata: finalizedResult.documentmetadata,
+                bank: finalizedResult.bank
+              }));
+            }
+            else if (data.type === 'accuracy') {
+              finalizedResult.Accuracy = data.accuracy;
+              setResult(prev => ({
+                ...prev,
+                Accuracy: data.accuracy
+              }));
+            }
+            else if (data.type === 'error') throw new Error(data.message);
+          } catch (e) { console.error("Error parsing NDJSON line:", e); }
+        }
+      }
+
+      message.success('Statement processed successfully!');
+      setUploadProgress(0);
+      setPasswordModalVisible(false);
+      setFilePassword('');
+      setPendingFile(null);
+
+    } catch (error) {
+      message.error(error.message || 'Processing failed');
+      console.error('Upload error:', error);
+    } finally {
+      setUploading(false);
+    }
   };
 
 
@@ -496,6 +499,7 @@ const SimpleUpload = () => {
         title: 'Remarks',
         dataIndex: 'remarks',
         key: 'remarks',
+        width: 400,
         editable: true,
         ellipsis: {
           showTitle: false,
@@ -572,7 +576,7 @@ const SimpleUpload = () => {
       }, {
         title: <span style={{ whiteSpace: 'nowrap' }}>Actions</span>,
         key: 'actions',
-        fixed: 'left',
+        fixed: 'right',
         width: 100,
         align: 'center',
         render: (_, __, index) => (
@@ -773,56 +777,7 @@ const SimpleUpload = () => {
     }
     
     setUploading(true);
-    const formData = new FormData();
-    console.log(filePassword);
-    formData.append('statement', pendingFile);
-    formData.append('password', filePassword);
-    formData.append('bankName', selectedBank);
-
-    try {
-      const token = localStorage.getItem('token');
-      const response = await axios.post(
-        `${API_URL}/simple/process`,
-        formData,
-        {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'multipart/form-data'
-          },
-          onUploadProgress: (progressEvent) => {
-            const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-            setUploadProgress(percent);
-          }
-        }
-      );
-
-      message.success('Statement processed successfully!');
-      
-      // NEW: Fetch the full result from the database using the resultId
-      const resultId = response.data.resultId;
-      const resultResponse = await axios.get(
-        `${API_URL}/simple/result/${resultId}`,
-        {
-          headers: { 'Authorization': `Bearer ${token}` }
-        }
-      );
-      
-      setResult(resultResponse.data.data);
-      setUploadProgress(0);
-      setPasswordModalVisible(false);
-      setFilePassword('');
-      setPendingFile(null);
-    } catch (error) {
-      if (error.response?.status === 401 && error.response?.data?.code === 'INVALID_PASSWORD') {
-        message.error('Invalid password, please try again.');
-      } else {
-        message.error(error.response?.data?.message || 'Processing failed');
-        setPasswordModalVisible(false); // Close if generic error
-      }
-      setUploadProgress(0);
-    } finally {
-      setUploading(false);
-    }
+    await processUpload(pendingFile, filePassword);
   };
 
   return (
@@ -1008,7 +963,8 @@ const SimpleUpload = () => {
       <ConfigProvider getPopupContainer={() => containerRef.current || document.body}>
         <div ref={containerRef} className="results-container">
           {result && (
-        <>
+            <Spin spinning={uploading} tip="Processing pages..." size="large">
+              <>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
              {/* Left Side: File Info (One Line) */}
              <div style={{ display: 'flex', alignItems: 'center', gap: '24px', fontSize: '14px' }}>
@@ -1137,11 +1093,12 @@ const SimpleUpload = () => {
               pagination={false}
               bordered
               sticky
-              scroll={{ x: 1300, y: isFullScreen ? 'calc(100vh - 120px)' : 600 }}
-            />
-          </Card>
-        </>
-      )}
+              scroll={{ x: 'max-content', y: isFullScreen ? 'calc(100vh - 120px)' : 600 }}
+              />
+            </Card>
+          </>
+          </Spin>
+          )}
 
       {/* Modals */}
       <Modal
