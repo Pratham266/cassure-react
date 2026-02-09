@@ -294,7 +294,7 @@ const SimpleUpload = () => {
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
       let buffer = '';
-      let finalizedResult = { transactions: [], documentmetadata: {}, Accuracy: {} };
+      let finalizedResult = { transactions: [], documentmetadata: {}, Accuracy: null };
 
       while (true) {
         const { done, value } = await reader.read();
@@ -685,42 +685,46 @@ const SimpleUpload = () => {
   const columns = getColumns();
 
   const handleExportCSV = () => {
-    if (!result || !result.transactions || result.transactions.length === 0) return;
+    if (!result || !result.transactions || result.transactions.length === 0) {
+      message.warning('No data to export');
+      return;
+    }
 
-    const firstRow = result.transactions[0];
     const csvRows = [];
     
-    // Build header row
-    const headers = ['Page', 'Table'];
-    if (firstRow.columns) {
-      headers.push(...Object.keys(firstRow.columns));
-    }
+    // Headers match our table columns
+    const headers = ['Date', 'Remarks', 'Reference/ID', 'Amount', 'Type', 'Balance'];
     csvRows.push(headers.join(','));
     
     // Build data rows
     result.transactions.forEach(txn => {
-      const row = [
-        txn.pageNumber || '',
-        txn.tableNumber || ''
+      // Create ordered array of values matching headers
+      const values = [
+        txn.date || '',
+        txn.remarks || '',
+        txn.txnId || '',
+        txn.amount || '0',
+        txn.type || '',
+        txn.balance || '0'
       ];
+
+      // Escape each value for CSV compatibility
+      const escapedValues = values.map(val => {
+        const escaped = String(val).replace(/"/g, '""');
+        return `"${escaped}"`;
+      });
       
-      if (txn.columns) {
-        Object.values(txn.columns).forEach(value => {
-          // Escape commas and quotes in CSV
-          const escaped = String(value || '').replace(/"/g, '""');
-          row.push(`"${escaped}"`);
-        });
-      }
-      
-      csvRows.push(row.join(','));
+      csvRows.push(escapedValues.join(','));
     });
 
-    const blob = new Blob([csvRows.join('\n')], { type: 'text/csv' });
+    const blob = new Blob([csvRows.join('\r\n')], { type: 'text/csv;charset=utf-8;' });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `all_tables_${Date.now()}.csv`;
+    a.download = `Extracted_Statement_${Date.now()}.csv`;
+    document.body.appendChild(a);
     a.click();
+    document.body.removeChild(a);
     window.URL.revokeObjectURL(url);
     message.success('CSV exported successfully!');
   };
@@ -796,97 +800,111 @@ const SimpleUpload = () => {
       
       {/* Upload Section - Hidden when results are shown */}
       {!result && (
-        <>
-        <div style={{ textAlign: 'center', marginBottom: '32px', maxWidth: '1000px', margin: '0 auto 32px auto' }}>
-            <h1 style={{ 
-              fontSize: '40px', 
-              fontWeight: 950, 
-              color: '#0f172a', 
-              marginBottom: '8px',
-              lineHeight: '1.05',
-              letterSpacing: '-0.05em'
-            }}>
-              Convert PDF Bank Statement
-            </h1>
-            <h2 style={{ 
-              fontSize: '32px', 
-              fontWeight: 800, 
-              color: '#0ea5e9', 
-              marginBottom: '32px',
-              marginTop: '0'
-            }}>
-              Into Tally XML or Excel
-            </h2>
+        <div style={{ maxWidth: '1200px', margin: '60px auto', padding: '0 20px' }}>
+          <Row gutter={[64, 48]} align="top">
+            {/* Left Side: Information & Guidelines */}
+            <Col xs={24} lg={11}>
+              <div style={{ textAlign: 'left' }}>
+                <h1 style={{ 
+                  fontSize: '48px', 
+                  fontWeight: 950, 
+                  color: '#0f172a', 
+                  marginBottom: '12px',
+                  lineHeight: '1.05',
+                  letterSpacing: '-0.05em'
+                }}>
+                  Convert PDF <span style={{ color: '#5b4ef5' }}>Bank Statement</span>
+                </h1>
+                <h2 style={{ 
+                  fontSize: '28px', 
+                  fontWeight: 700, 
+                  color: '#475569', 
+                  marginBottom: '48px',
+                  marginTop: '0',
+                  lineHeight: '1.2'
+                }}>
+                  Into Tally XML or Excel with <br/>Enterprise-Grade Precision.
+                </h2>
 
-            <div style={{ 
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '8px',
-              maxWidth: '800px',
-              margin: '0 auto',
-              textAlign: 'left'
-            }}>
-              {[
-                "Please use original, bank-issued PDF statements and include all pages for optimal accuracy.",
-                "If your file is protected, please keep the password active; our system handles encrypted files securely.",
-                "Digital PDF formats are required. Scanned documents or images are not supported at this time."
-              ].map((text, i) => (
-                <div 
-                  key={i}
-                  className="animate-point"
-                  style={{ 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    gap: '16px',
-                    padding: '12px 20px',
-                    background: 'white',
-                    border: '1px solid #fee2e2',
-                    borderLeft: '4px solid #ef4444',
-                    borderRadius: '10px',
-                    color: '#475569',
-                    fontSize: '14px',
-                    fontWeight: 500,
-                    animationDelay: `${i * 0.15}s`,
-                    opacity: 0,
-                    boxShadow: '0 2px 10px rgba(239, 68, 68, 0.04)'
-                  }}
-                >
-                  <div style={{
-                    minWidth: '24px',
-                    height: '24px',
-                    background: '#ef4444',
-                    color: 'white',
-                    borderRadius: '50%',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: '12px',
-                    fontWeight: 800
-                  }}>{i + 1}</div>
-                  {text}
+                <div style={{ 
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '12px',
+                }}>
+                  {[
+                    "Please use original, bank-issued PDF statements and include all pages for optimal accuracy.",
+                    "If your file is protected, please keep the password active; our system handles encrypted files securely.",
+                    "Digital PDF formats are required. Scanned documents or images are not supported at this time."
+                  ].map((text, i) => (
+                    <div 
+                      key={i}
+                      className="animate-point"
+                      style={{ 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        gap: '16px',
+                        padding: '16px 20px',
+                        background: 'white',
+                        border: '1px solid #fee2e2',
+                        borderLeft: '4px solid #ef4444',
+                        borderRadius: '12px',
+                        color: '#475569',
+                        fontSize: '15px',
+                        fontWeight: 500,
+                        animationDelay: `${i * 0.15}s`,
+                        opacity: 0,
+                        boxShadow: '0 4px 6px -1px rgba(239, 68, 68, 0.05)'
+                      }}
+                    >
+                      <div style={{
+                        minWidth: '28px',
+                        height: '28px',
+                        background: '#ef4444',
+                        color: 'white',
+                        borderRadius: '8px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '14px',
+                        fontWeight: 800
+                      }}>{i + 1}</div>
+                      {text}
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          </div>
-          <div style={{ background: '#ffffff', border: '1px solid #E0E0E0', borderRadius: '12px', overflow: 'hidden', marginBottom: '32px' }}>
-             <div style={{ padding: '24px' }}>
-                <div style={{ marginBottom: '24px' }}>
-                  <Text strong style={{ display: 'block', marginBottom: '8px', color: '#1A1A1A', fontSize: '15px' }}>Select Bank Format</Text>
+              </div>
+            </Col>
+
+            {/* Right Side: Action Area (Select & Upload) */}
+            <Col xs={24} lg={13}>
+              <div style={{ 
+                background: '#ffffff', 
+                border: '1px solid #e2e8f0', 
+                borderRadius: '24px', 
+                padding: '32px',
+                boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.05)' 
+              }}>
+                <div style={{ marginBottom: '32px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+                    <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#5b4ef5' }}></div>
+                    <Text strong style={{ color: '#0f172a', fontSize: '16px' }}>Configuration</Text>
+                  </div>
+                  <Text type="secondary" style={{ display: 'block', marginBottom: '8px', fontSize: '14px' }}>Select your bank format to begin extraction</Text>
                   <Select
-                    style={{ width: '100%', height: '48px' }}
+                    style={{ width: '100%', height: '54px' }}
                     size="large"
                     placeholder="Choose your bank to start"
                     value={selectedBank}
                     onChange={setSelectedBank}
                     allowClear
                     className="custom-bank-select"
-                    dropdownStyle={{ padding: '8px' }}
+                    dropdownStyle={{ padding: '8px', borderRadius: '12px' }}
                     getPopupContainer={() => containerRef.current || document.body}
                   >
                     {bankOptions.map(bank => (
-                      <Option key={bank} value={bank} style={{ padding: '10px 20px' }}>
+                      <Option key={bank} value={bank} style={{ padding: '12px 20px', borderRadius: '8px' }}>
                         <Space style={{ fontSize: '15px', fontWeight: 500 }}>
-                          <BankOutlined style={{ fontSize: '16px', color: '#0ea5e9' }} />
+                          <BankOutlined style={{ fontSize: '18px', color: '#5b4ef5' }} />
                           {bank}
                         </Space>
                       </Option>
@@ -894,69 +912,87 @@ const SimpleUpload = () => {
                   </Select>
                 </div>
 
-                {!selectedBank && (
-                  <div style={{ 
-                    textAlign: 'center', 
-                    padding: '40px 20px', 
-                    background: '#f8fafc', 
-                    borderRadius: '16px', 
-                    color: '#64748b',
-                    marginBottom: '8px',
-                    border: '2px dashed #e2e8f0'
-                  }}>
-                    <BankOutlined style={{ fontSize: '32px', marginBottom: '16px', color: '#94a3b8' }} />
-                    <p style={{ fontSize: '17px', fontWeight: 500, margin: 0, color: '#475569' }}>
-                      Please select a bank format to enable file processing.
-                    </p>
+                <div style={{ marginTop: '32px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+                    <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: selectedBank ? '#5b4ef5' : '#94a3b8' }}></div>
+                    <Text strong style={{ color: selectedBank ? '#0f172a' : '#94a3b8', fontSize: '16px' }}>Upload Document</Text>
                   </div>
-                )}
 
-                {selectedBank && (
-                <Dragger 
-                  {...uploadProps} 
-                  disabled={uploading || !selectedBank}
-                  style={{
-                    background: '#f0f9ff',
-                    border: '2px dashed #0369a1',
-                    borderRadius: '16px',
-                    padding: '24px 0',
-                    transition: 'all 0.3s ease'
-                  }}
-                  className="custom-dragger"
-                >
-                   <div style={{ padding: '12px 0' }}>
-                     <p className="ant-upload-drag-icon">
-                        <InboxOutlined style={{ fontSize: '48px', color: '#0ea5e9' }} />
-                     </p>
-                     <p className="ant-upload-text" style={{ fontSize: '18px', fontWeight: 700, color: '#0f172a', marginTop: '16px' }}>
-                       Drop your PDF here OR click to browse
-                     </p>
-                     <p className="ant-upload-hint" style={{ fontSize: '14px', color: '#64748b', marginTop: '6px' }}>
-                       Secure processing for bank PDFs up to 50MB
-                     </p>
-                   </div>
-                </Dragger>
-                )}
-
-                {uploading && (
-                  <div style={{ marginTop: '24px' }}>
-                    <Text type="secondary" style={{ fontSize: '13px', marginBottom: '4px', display: 'block' }}>Analyzing Document In Real-Time...</Text>
-                    <Progress 
-                      percent={uploadProgress} 
-                      status="active"
-                      strokeColor={{
-                        '0%': '#0ea5e9',
-                        '100%': '#0369a1',
+                  {!selectedBank ? (
+                    <div style={{ 
+                      textAlign: 'center', 
+                      padding: '80px 20px', 
+                      background: '#f8fafc', 
+                      borderRadius: '20px', 
+                      color: '#64748b',
+                      border: '2px dashed #e2e8f0',
+                      transition: 'all 0.3s ease'
+                    }}>
+                      <div style={{ background: 'white', width: '64px', height: '64px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px auto', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}>
+                        <BankOutlined style={{ fontSize: '28px', color: '#94a3b8' }} />
+                      </div>
+                      <p style={{ fontSize: '16px', fontWeight: 600, margin: 0, color: '#475569' }}>
+                        Select a bank format above
+                      </p>
+                      <p style={{ fontSize: '14px', color: '#94a3b8', marginTop: '4px' }}>
+                        to enable the upload area
+                      </p>
+                    </div>
+                  ) : (
+                    <Dragger 
+                      {...uploadProps} 
+                      disabled={uploading || !selectedBank}
+                      style={{
+                        background: '#f5f3ff',
+                        border: '2px dashed #5b4ef5',
+                        borderRadius: '20px',
+                        padding: '40px 0',
+                        transition: 'all 0.3s ease'
                       }}
-                      strokeWidth={8}
-                    />
-                  </div>
-                )}
-             </div>
-          </div>
+                      className="custom-dragger"
+                    >
+                      <div style={{ padding: '12px 0' }}>
+                        <div style={{ background: 'white', width: '64px', height: '64px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px auto', boxShadow: '0 10px 15px -3px rgba(91, 78, 245, 0.1)' }}>
+                          <InboxOutlined style={{ fontSize: '32px', color: '#5b4ef5' }} />
+                        </div>
+                        <p className="ant-upload-text" style={{ fontSize: '18px', fontWeight: 700, color: '#0f172a', marginTop: '16px' }}>
+                          Drop your PDF here
+                        </p>
+                        <p className="ant-upload-hint" style={{ fontSize: '14px', color: '#64748b', marginTop: '6px' }}>
+                          Click to browse or drag and drop (Max 50MB)
+                        </p>
+                      </div>
+                    </Dragger>
+                  )}
 
-          
-        </>
+                  {uploading && (
+                    <div style={{ marginTop: '32px', padding: '24px', background: '#f8fafc', borderRadius: '16px', border: '1px solid #e2e8f0' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px' }}>
+                        <Text strong style={{ fontSize: '14px', color: '#5b4ef5' }}>Analyzing Document...</Text>
+                        <Text strong style={{ fontSize: '14px', color: '#5b4ef5' }}>{uploadProgress}%</Text>
+                      </div>
+                      <Progress 
+                        percent={uploadProgress} 
+                        showInfo={false}
+                        status="active"
+                        strokeColor={{
+                          '0%': '#5b4ef5',
+                          '100%': '#4338ca',
+                        }}
+                        strokeWidth={10}
+                      />
+                      <center>
+                        <Text type="secondary" style={{ fontSize: '12px', marginTop: '12px', display: 'block' }}>
+                          Processing pages sequentially for high precision
+                        </Text>
+                      </center>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </Col>
+          </Row>
+        </div>
       )}
 
       {/* Results Section - Full Screen Focus on Table */}
@@ -998,7 +1034,7 @@ const SimpleUpload = () => {
           
           {/* Compact Integrity Banner */}
           {/* Accuracy Status Bar */}
-          {result.Accuracy && (
+          {!!result.Accuracy && (
             <div style={{
               background: result.Accuracy.isAccurate ? '#f6ffed' : '#fff1f0',
               border: `1px solid ${result.Accuracy.isAccurate ? '#b7eb8f' : '#ffa39e'}`,
