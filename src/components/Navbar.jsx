@@ -2,12 +2,11 @@ import React, { useState } from 'react';
 import { Layout, Dropdown, Avatar, Space, Modal, Form, Input, Button, message } from 'antd';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { 
-  FileTextOutlined, 
-  TransactionOutlined,
-  UserOutlined,
-  LogoutOutlined,
-  QuestionCircleOutlined
-} from '@ant-design/icons';
+  HiOutlineDocumentText, 
+  HiOutlineUser,
+  HiOutlineArrowRightOnRectangle,
+  HiOutlineQuestionMarkCircle
+} from 'react-icons/hi2';
 import { useAuth } from '../context/AuthContext';
 import { helpAPI } from '../utils/api';
 
@@ -55,7 +54,7 @@ const Navbar = () => {
   const menuItems = [
     {
       key: '/simple',
-      icon: <FileTextOutlined />,
+      icon: <HiOutlineDocumentText />,
       label: 'Home'
     },
     {
@@ -141,7 +140,7 @@ const Navbar = () => {
             onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
             onClick={() => setIsHelpVisible(true)}
           >
-            <QuestionCircleOutlined style={{ fontSize: '20px', color: '#64748b' }} />
+            <HiOutlineQuestionMarkCircle style={{ fontSize: '20px', color: '#64748b' }} />
           </div>
 
           <div 
@@ -194,7 +193,7 @@ const Navbar = () => {
           <Button 
             type="text" 
             danger 
-            icon={<LogoutOutlined />}
+            icon={<HiOutlineArrowRightOnRectangle />}
             onClick={() => {
               logout();
               navigate('/login');

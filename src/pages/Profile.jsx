@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Input, Button, Card, Typography, message, Space, Divider, Modal } from 'antd';
-import { UserOutlined, MailOutlined, MobileOutlined, SaveOutlined, DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import { 
+  HiOutlineUser, 
+  HiOutlineEnvelope, 
+  HiOutlinePhone, 
+  HiOutlineCheck, 
+  HiOutlineTrash, 
+  HiOutlineExclamationCircle 
+} from 'react-icons/hi2';
 import { useAuth } from '../context/AuthContext';
 
 const { Title, Text } = Typography;
@@ -38,7 +45,7 @@ const Profile = () => {
   const showDeleteConfirm = () => {
     confirm({
       title: 'Are you sure you want to delete your account?',
-      icon: <ExclamationCircleOutlined style={{ color: '#ff4d4f' }} />,
+      icon: <HiOutlineExclamationCircle style={{ color: '#ff4d4f', fontSize: '22px' }} />,
       content: 'This action is permanent and cannot be undone. All your data will be permanently deleted.',
       okText: 'Yes, Delete Account',
       okType: 'danger',
@@ -126,11 +133,11 @@ const Profile = () => {
               rules={[{ required: true, message: 'Please input your name!' }]}
             >
               <Input 
-                prefix={<UserOutlined style={{ color: '#94a3b8' }} />} 
+                prefix={<HiOutlineUser style={{ color: '#94a3b8', fontSize: '18px' }} />} 
                 style={{ borderRadius: '12px', border: '1px solid #e2e8f0', background: isEditing ? 'white' : '#f8fafc' }}
               />
             </Form.Item>
-
+ 
             <Form.Item
               name="email"
               label={<Text strong style={{ color: '#475569', fontSize: '14px' }}>Email Address</Text>}
@@ -140,7 +147,7 @@ const Profile = () => {
               ]}
             >
               <Input 
-                prefix={<MailOutlined style={{ color: '#94a3b8' }} />} 
+                prefix={<HiOutlineEnvelope style={{ color: '#94a3b8', fontSize: '18px' }} />} 
                 style={{ borderRadius: '12px', border: '1px solid #e2e8f0', background: isEditing ? 'white' : '#f8fafc' }}
               />
             </Form.Item>
@@ -154,7 +161,7 @@ const Profile = () => {
               ]}
             >
               <Input 
-                prefix={<MobileOutlined style={{ color: '#94a3b8' }} />} 
+                prefix={<HiOutlinePhone style={{ color: '#94a3b8', fontSize: '18px' }} />} 
                 style={{ borderRadius: '12px', border: '1px solid #e2e8f0', background: isEditing ? 'white' : '#f8fafc' }}
               />
             </Form.Item>
@@ -164,8 +171,7 @@ const Profile = () => {
             <Form.Item style={{ marginTop: '24px', marginBottom: 0 }}>
               <Button 
                 type="primary" 
-                htmlType="submit" 
-                icon={<SaveOutlined />} 
+                htmlType="submit"                 icon={<HiOutlineCheck style={{ fontSize: '18px' }} />} 
                 loading={loading}
                 style={{ 
                   background: '#5b4ef5', 
@@ -192,8 +198,7 @@ const Profile = () => {
           </div>
           <Button 
             danger 
-            type="primary" 
-            icon={<DeleteOutlined />}
+            type="primary"             icon={<HiOutlineTrash style={{ fontSize: '18px' }} />}
             onClick={showDeleteConfirm}
             style={{ borderRadius: '12px', height: '44px', fontWeight: 600 }}
           >

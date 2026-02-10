@@ -10,12 +10,12 @@ import {
   Alert
 } from 'antd';
 import { 
-  InfoCircleOutlined,
-  CheckCircleFilled,
-  SyncOutlined,
-  CloudOutlined,
-  CustomerServiceOutlined
-} from '@ant-design/icons';
+  HiOutlineInformationCircle,
+  HiOutlineArrowPath,
+  HiOutlineCloud,
+  HiOutlineChatBubbleLeftRight
+} from 'react-icons/hi2';
+import { HiCheckCircle } from 'react-icons/hi';
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -48,7 +48,7 @@ const Billing = () => {
                 <Tag color="blue" style={{ marginBottom: '12px', borderRadius: '4px', padding: '2px 8px' }}>CURRENT PLAN</Tag>
                 <Title level={3} style={{ margin: 0, color: '#5B4EF5' }}>Enjoy Plan</Title>
               </div>
-              <Tag icon={<CheckCircleFilled />} color="success" style={{ borderRadius: '20px', padding: '4px 12px' }}>Active</Tag>
+              <Tag icon={<HiCheckCircle style={{ fontSize: '14px' }} />} color="success" style={{ borderRadius: '20px', padding: '4px 12px' }}>Active</Tag>
             </div>
 
             <div style={{ marginBottom: '32px' }}>
@@ -93,21 +93,21 @@ const Billing = () => {
           >
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               <div style={{ display: 'flex', gap: '12px' }}>
-                <SyncOutlined style={{ color: '#5B4EF5', fontSize: '18px', marginTop: '4px' }} />
+                <HiOutlineArrowPath style={{ color: '#5B4EF5', fontSize: '18px', marginTop: '4px' }} />
                 <div>
                   <Text strong style={{ display: 'block' }}>Priority Processing</Text>
                   <Text type="secondary" style={{ fontSize: '12px' }}>Statements are processed in the high-speed queue.</Text>
                 </div>
               </div>
               <div style={{ display: 'flex', gap: '12px' }}>
-                <CloudOutlined style={{ color: '#5B4EF5', fontSize: '18px', marginTop: '4px' }} />
+                <HiOutlineCloud style={{ color: '#5B4EF5', fontSize: '18px', marginTop: '4px' }} />
                 <div>
                   <Text strong style={{ display: 'block' }}>Multi-bank Support</Text>
                   <Text type="secondary" style={{ fontSize: '12px' }}>Access to all supported bank statement templates.</Text>
                 </div>
               </div>
               <div style={{ display: 'flex', gap: '12px' }}>
-                <CustomerServiceOutlined style={{ color: '#5B4EF5', fontSize: '18px', marginTop: '4px' }} />
+                <HiOutlineChatBubbleLeftRight style={{ color: '#5B4EF5', fontSize: '18px', marginTop: '4px' }} />
                 <div>
                   <Text strong style={{ display: 'block' }}>Early Access</Text>
                   <Text type="secondary" style={{ fontSize: '12px' }}>Instant access to all beta features and toolsets.</Text>
@@ -140,7 +140,7 @@ const Billing = () => {
             }
             type="info"
             showIcon
-            icon={<InfoCircleOutlined style={{ fontSize: '24px' }} />}
+            icon={<HiOutlineInformationCircle style={{ fontSize: '24px' }} />}
             style={{ 
               borderRadius: '8px',
               padding: '24px',

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Form, Input, Button, Card, Typography, message } from 'antd';
-import { UserOutlined, LockOutlined } from '@ant-design/icons';
+import { HiOutlineUser, HiOutlineLockClosed } from 'react-icons/hi2';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
@@ -87,7 +87,7 @@ const Login = () => {
             style={{ marginBottom: '16px' }}
           >
             <Input 
-              prefix={<UserOutlined style={{ color: '#94a3b8' }} />} 
+              prefix={<HiOutlineUser style={{ color: '#94a3b8', fontSize: '18px' }} />} 
               placeholder="name@company.com" 
               style={{ borderRadius: '8px', height: '44px' }}
             />
@@ -100,7 +100,7 @@ const Login = () => {
             style={{ marginBottom: '24px' }}
           >
             <Input.Password
-              prefix={<LockOutlined style={{ color: '#94a3b8' }} />}
+              prefix={<HiOutlineLockClosed style={{ color: '#94a3b8', fontSize: '18px' }} />}
               placeholder="••••••••"
               style={{ borderRadius: '8px', height: '44px' }}
             />

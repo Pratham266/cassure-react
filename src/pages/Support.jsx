@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Form, Input, Button, Card, Typography, Select, message, Alert, Space } from 'antd';
 import { 
-  QuestionCircleOutlined, 
-  SendOutlined, 
-  RocketOutlined, 
-  BugOutlined
-} from '@ant-design/icons';
+  HiOutlineQuestionMarkCircle, 
+  HiOutlinePaperAirplane, 
+  HiOutlineRocketLaunch, 
+  HiOutlineBugAnt
+} from 'react-icons/hi2';
 import { useAuth } from '../context/AuthContext';
 import { helpAPI } from '../utils/api';
 
@@ -49,7 +49,7 @@ const Support = () => {
         description="We are currently in the active development phase. If you want any new feature or template to be added, please send us a request below!"
         type="info"
         showIcon
-        icon={<RocketOutlined />}
+        icon={<HiOutlineRocketLaunch style={{ fontSize: '18px', color: '#5b4ef5' }} />}
         style={{ marginBottom: '32px', borderRadius: '12px', background: '#f5f3ff', border: '1px solid #ddd6fe' }}
       />
 
@@ -101,13 +101,13 @@ const Support = () => {
           >
             <Select style={{ borderRadius: '8px' }}>
               <Option value="General Support">
-                <Space><QuestionCircleOutlined /> General Support</Space>
+                <Space><HiOutlineQuestionMarkCircle style={{ fontSize: '16px' }} /> General Support</Space>
               </Option>
               <Option value="Feature Request">
-                <Space><RocketOutlined /> Feature Request</Space>
+                <Space><HiOutlineRocketLaunch style={{ fontSize: '16px' }} /> Feature Request</Space>
               </Option>
               <Option value="Bug Report">
-                <Space><BugOutlined /> Bug Report</Space>
+                <Space><HiOutlineBugAnt style={{ fontSize: '16px' }} /> Bug Report</Space>
               </Option>
               <Option value="Other">Other</Option>
             </Select>
@@ -129,7 +129,7 @@ const Support = () => {
             <Button 
               type="primary" 
               htmlType="submit" 
-              icon={<SendOutlined />} 
+              icon={<HiOutlinePaperAirplane style={{ fontSize: '18px' }} />} 
               loading={loading}
               block
               style={{ 

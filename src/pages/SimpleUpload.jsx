@@ -24,23 +24,22 @@ import {
 } from 'antd';
 import { exportToTallyXML } from '../utils/tallyXmlGenerator';
 import { 
-  InboxOutlined, 
-  FileTextOutlined,
-  DownloadOutlined,
-  LockOutlined,
-  ReloadOutlined,
-  BankOutlined,
-  DeleteOutlined,
-  PlusOutlined,
-  PlusCircleOutlined,
-  ArrowUpOutlined,
-  ArrowDownOutlined,
-  EditOutlined,
-  CheckCircleFilled,
-  CloseCircleFilled,
-  FullscreenOutlined,
-  FullscreenExitOutlined
-} from '@ant-design/icons';
+  HiOutlineInbox, 
+  HiOutlineDocumentText,
+  HiOutlineArrowDownTray,
+  HiOutlineLockClosed,
+  HiOutlineArrowPath,
+  HiOutlineBuildingLibrary,
+  HiOutlineTrash,
+  HiOutlinePlus,
+  HiOutlinePlusCircle,
+  HiOutlineArrowUp,
+  HiOutlineArrowDown,
+  HiOutlinePencilSquare,
+  HiOutlineArrowsPointingOut,
+  HiOutlineArrowsPointingIn
+} from 'react-icons/hi2';
+import { HiCheckCircle, HiXCircle } from 'react-icons/hi';
 import axios from 'axios';
 import moment from 'moment-timezone';
 import { API_URL } from '../utils/api';
@@ -353,7 +352,7 @@ const SimpleUpload = () => {
   const handleSave = (row, dataIndex, oldValue, newValue, index) => {
     confirm({
       title: 'Confirm Update',
-      icon: <ReloadOutlined style={{ color: '#faad14' }} />,
+      icon: <HiOutlineArrowPath style={{ color: '#faad14', fontSize: '20px' }} />,
       content: (
         <div>
            <p>Are you sure you want to update this value?</p>
@@ -385,7 +384,7 @@ const SimpleUpload = () => {
   const handleDelete = (index) => {
     confirm({
       title: 'Delete Transaction',
-      icon: <DeleteOutlined style={{ color: '#ff4d4f' }} />,
+      icon: <HiOutlineTrash style={{ color: '#ff4d4f', fontSize: '20px' }} />,
       content: 'Are you sure you want to delete this transaction?',
       okText: 'Yes, Delete',
       okType: 'danger',
@@ -402,7 +401,7 @@ const SimpleUpload = () => {
   const handleAdd = (index) => {
     confirm({
       title: 'Add New Transaction',
-      icon: <PlusCircleOutlined style={{ color: '#1890ff' }} />,
+      icon: <HiOutlinePlusCircle style={{ color: '#1890ff', fontSize: '20px' }} />,
       content: 'Insert a new empty transaction here?',
       okText: 'Yes, Insert',
       cancelText: 'Cancel',
@@ -604,7 +603,7 @@ const SimpleUpload = () => {
                   background: '#f6ffed'
                 }}
               >
-                <ArrowUpOutlined style={{ fontSize: '12px', color: '#52c41a' }} />
+                <HiOutlineArrowUp style={{ fontSize: '12px', color: '#52c41a' }} />
               </div>
             </Tooltip>
 
@@ -622,7 +621,7 @@ const SimpleUpload = () => {
                   background: '#e6f7ff'
                 }}
               >
-                <ArrowDownOutlined style={{ fontSize: '12px', color: '#1890ff' }} />
+                <HiOutlineArrowDown style={{ fontSize: '12px', color: '#1890ff' }} />
               </div>
             </Tooltip>
 
@@ -640,7 +639,7 @@ const SimpleUpload = () => {
                   background: '#fff1f0'
                 }}
               >
-                <DeleteOutlined style={{ fontSize: '12px', color: '#ff4d4f' }} />
+                <HiOutlineTrash style={{ fontSize: '12px', color: '#ff4d4f' }} />
               </div>
             </Tooltip>
 
@@ -656,7 +655,7 @@ const SimpleUpload = () => {
                   background: '#fafafa'
                 }}
               >
-                <EditOutlined style={{ fontSize: '12px', color: '#595959' }} />
+                <HiOutlinePencilSquare style={{ fontSize: '12px', color: '#595959' }} />
               </div>
             </Tooltip>
           </div>
@@ -762,7 +761,7 @@ const SimpleUpload = () => {
   const handleResetCheck = () => {
     confirm({
       title: 'Upload New Statement?',
-      icon: <FileTextOutlined style={{ color: '#5B4EF5' }} />,
+      icon: <HiOutlineDocumentText style={{ color: '#5B4EF5', fontSize: '20px' }} />,
       content: 'Uploading a new statement will clear the current extracted data. Are you sure you want to proceed?',
       okText: 'Yes, Upload New',
       okType: 'primary',
@@ -809,19 +808,20 @@ const SimpleUpload = () => {
                   fontSize: '48px', 
                   fontWeight: 950, 
                   color: '#0f172a', 
-                  marginBottom: '12px',
-                  lineHeight: '1.05',
-                  letterSpacing: '-0.05em'
+                  marginBottom: '16px',
+                  lineHeight: '1.1',
+                  letterSpacing: '-0.02em'
                 }}>
                   Convert PDF <span style={{ color: '#5b4ef5' }}>Bank Statement</span>
                 </h1>
                 <h2 style={{ 
-                  fontSize: '28px', 
-                  fontWeight: 700, 
+                  fontSize: '24px', 
+                  fontWeight: 600, 
                   color: '#475569', 
                   marginBottom: '48px',
                   marginTop: '0',
-                  lineHeight: '1.2'
+                  lineHeight: '1.4',
+                  letterSpacing: '0.01em'
                 }}>
                   Into Tally XML or Excel with <br/>Enterprise-Grade Precision.
                 </h2>
@@ -841,34 +841,48 @@ const SimpleUpload = () => {
                       className="animate-point"
                       style={{ 
                         display: 'flex', 
-                        alignItems: 'center', 
-                        gap: '16px',
-                        padding: '16px 20px',
-                        background: 'white',
-                        border: '1px solid #fee2e2',
-                        borderLeft: '4px solid #ef4444',
-                        borderRadius: '12px',
-                        color: '#475569',
+                        alignItems: 'flex-start', 
+                        gap: '20px',
+                        padding: '20px 24px',
+                        background: '#ffffff',
+                        border: '1px solid #e2e8f0',
+                        borderRadius: '16px',
+                        color: '#334155',
                         fontSize: '15px',
+                        lineHeight: '1.6',
                         fontWeight: 500,
                         animationDelay: `${i * 0.15}s`,
                         opacity: 0,
-                        boxShadow: '0 4px 6px -1px rgba(239, 68, 68, 0.05)'
+                        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.02)',
+                        transition: 'all 0.3s ease',
+                        cursor: 'default'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.borderColor = '#5b4ef5';
+                        e.currentTarget.style.transform = 'translateY(-2px)';
+                        e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(91, 78, 245, 0.1)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.borderColor = '#e2e8f0';
+                        e.currentTarget.style.transform = 'translateY(0)';
+                        e.currentTarget.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.02)';
                       }}
                     >
                       <div style={{
-                        minWidth: '28px',
-                        height: '28px',
-                        background: '#ef4444',
-                        color: 'white',
-                        borderRadius: '8px',
+                        minWidth: '32px',
+                        height: '32px',
+                        background: '#f1f5f9',
+                        color: '#64748b',
+                        borderRadius: '10px',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
                         fontSize: '14px',
-                        fontWeight: 800
+                        fontWeight: 800,
+                        flexShrink: 0,
+                        marginTop: '2px'
                       }}>{i + 1}</div>
-                      {text}
+                      <div style={{ letterSpacing: '0.01em' }}>{text}</div>
                     </div>
                   ))}
                 </div>
@@ -904,7 +918,7 @@ const SimpleUpload = () => {
                     {bankOptions.map(bank => (
                       <Option key={bank} value={bank} style={{ padding: '12px 20px', borderRadius: '8px' }}>
                         <Space style={{ fontSize: '15px', fontWeight: 500 }}>
-                          <BankOutlined style={{ fontSize: '18px', color: '#5b4ef5' }} />
+                          <HiOutlineBuildingLibrary style={{ fontSize: '18px', color: '#5b4ef5' }} />
                           {bank}
                         </Space>
                       </Option>
@@ -929,7 +943,7 @@ const SimpleUpload = () => {
                       transition: 'all 0.3s ease'
                     }}>
                       <div style={{ background: 'white', width: '64px', height: '64px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px auto', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}>
-                        <BankOutlined style={{ fontSize: '28px', color: '#94a3b8' }} />
+                        <HiOutlineBuildingLibrary style={{ fontSize: '28px', color: '#94a3b8' }} />
                       </div>
                       <p style={{ fontSize: '16px', fontWeight: 600, margin: 0, color: '#475569' }}>
                         Select a bank format above
@@ -953,7 +967,7 @@ const SimpleUpload = () => {
                     >
                       <div style={{ padding: '12px 0' }}>
                         <div style={{ background: 'white', width: '64px', height: '64px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px auto', boxShadow: '0 10px 15px -3px rgba(91, 78, 245, 0.1)' }}>
-                          <InboxOutlined style={{ fontSize: '32px', color: '#5b4ef5' }} />
+                          <HiOutlineInbox style={{ fontSize: '32px', color: '#5b4ef5' }} />
                         </div>
                         <p className="ant-upload-text" style={{ fontSize: '18px', fontWeight: 700, color: '#0f172a', marginTop: '16px' }}>
                           Drop your PDF here
@@ -1018,7 +1032,7 @@ const SimpleUpload = () => {
              {/* Right Side: Upload New Button */}
              <Button 
                 onClick={handleResetCheck}
-                icon={<ReloadOutlined />}
+                icon={<HiOutlineArrowPath style={{ fontSize: '18px' }} />}
                 size="middle"
                 type="primary"
                 style={{ 
@@ -1047,9 +1061,9 @@ const SimpleUpload = () => {
             }}>
                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   {result.Accuracy.isAccurate ? (
-                    <CheckCircleFilled style={{ color: '#52c41a', fontSize: '18px' }} />
+                    <HiCheckCircle style={{ color: '#52c41a', fontSize: '18px' }} />
                   ) : (
-                    <CloseCircleFilled style={{ color: '#ff4d4f', fontSize: '18px' }} />
+                    <HiXCircle style={{ color: '#ff4d4f', fontSize: '18px' }} />
                   )}
                   <Text strong style={{ fontSize: '15px' }}>
                     {result.Accuracy.isAccurate ? 'Financial Integrity Verified' : 'Financial Discrepancy Detected'}
@@ -1110,10 +1124,10 @@ const SimpleUpload = () => {
                   <Button onClick={handleOpenTallyModal} type="primary" ghost style={{ borderColor: '#ffa940', color: '#ffa940' }}>
                      Download Tally XML
                   </Button>
-                   <Button icon={isFullScreen ? <FullscreenExitOutlined /> : <FullscreenOutlined />} onClick={() => setIsFullScreen(!isFullScreen)}>
+                   <Button icon={isFullScreen ? <HiOutlineArrowsPointingIn style={{ fontSize: '18px' }} /> : <HiOutlineArrowsPointingOut style={{ fontSize: '18px' }} />} onClick={() => setIsFullScreen(!isFullScreen)}>
                       {isFullScreen ? 'Exit Full Screen' : 'Full Screen'}
                    </Button>
-                   <Button icon={<DownloadOutlined />} onClick={handleExportCSV}>
+                   <Button icon={<HiOutlineArrowDownTray style={{ fontSize: '18px' }} />} onClick={handleExportCSV}>
                       Export CSV
                    </Button>
                 </Space>
@@ -1169,7 +1183,7 @@ const SimpleUpload = () => {
       <Modal
         title={
           <Space>
-            <LockOutlined style={{ color: '#faad14' }} />
+            <HiOutlineLockClosed style={{ color: '#faad14', fontSize: '20px' }} />
             <span>Password Required</span>
           </Space>
         }

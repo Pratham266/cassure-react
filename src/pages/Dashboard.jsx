@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Row, Col, Card, Statistic, Typography, Table, Tag, message, Spin, Empty, Space } from 'antd';
 import { 
-  FileTextOutlined, 
-  CheckCircleOutlined, 
-  ClockCircleOutlined, 
-  ArrowUpOutlined,
-  ExclamationCircleOutlined,
-  BankOutlined
-} from '@ant-design/icons';
+  HiOutlineDocumentText, 
+  HiOutlineCheckCircle, 
+  HiOutlineExclamationCircle, 
+  HiOutlineBuildingLibrary,
+  HiOutlineClock,
+  HiOutlineArrowUp
+} from 'react-icons/hi2';
 import { statementAPI } from '../utils/api';
 import moment from 'moment';
 
@@ -46,19 +46,19 @@ const Dashboard = () => {
     { 
       title: 'Total Statements', 
       value: summary.totalStatements, 
-      icon: <FileTextOutlined />, 
+      icon: <HiOutlineDocumentText style={{ fontSize: '20px' }} />, 
       color: '#5B4EF5' 
     },
     { 
       title: 'Accuracy Rate', 
       value: summary.accuracyRate, 
-      icon: <CheckCircleOutlined />, 
+      icon: <HiOutlineCheckCircle style={{ fontSize: '20px' }} />, 
       color: '#10b981' 
     },
     { 
       title: 'Failed/Inaccurate', 
       value: summary.inaccurateStatements, 
-      icon: <ExclamationCircleOutlined />, 
+      icon: <HiOutlineExclamationCircle style={{ fontSize: '20px' }} />, 
       color: summary.inaccurateStatements > 0 ? '#ef4444' : '#64748b' 
     },
   ];
@@ -82,7 +82,7 @@ const Dashboard = () => {
       key: 'bankName',
       render: (bank) => (
         <Space>
-          <BankOutlined style={{ color: '#64748b' }} />
+          <HiOutlineBuildingLibrary style={{ color: '#64748b', fontSize: '16px' }} />
           {bank}
         </Space>
       )
