@@ -40,19 +40,22 @@ api.interceptors.response.use(
 export const authAPI = {
   register: (data) => api.post('/auth/register', data),
   login: (data) => api.post('/auth/login', data),
-  getMe: () => api.get('/auth/me')
+  getMe: () => api.get('/auth/me'),
+  updateProfile: (data) => api.put('/auth/profile', data),
+  deleteProfile: () => api.delete('/auth/profile')
 };
 
 // Statement APIs
 export const statementAPI = {
-  upload: (formData, onUploadProgress) => 
+  upload: (formData, onUploadProgress) =>
     api.post('/statements/upload', formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
       onUploadProgress
     }),
   getAll: (params) => api.get('/statements', { params }),
   getById: (id) => api.get(`/statements/${id}`),
-  delete: (id) => api.delete(`/statements/${id}`)
+  delete: (id) => api.delete(`/statements/${id}`),
+  getDashboardStats: () => api.get('/simple/stats')
 };
 
 // Transaction APIs

@@ -144,16 +144,29 @@ const Navbar = () => {
             <QuestionCircleOutlined style={{ fontSize: '20px', color: '#64748b' }} />
           </div>
 
-          <div style={{ 
-            display: 'flex', 
-            alignItems: 'center', 
-            gap: '12px',
-            padding: '4px 12px 4px 6px',
-            background: '#f8fafc',
-            borderRadius: '20px',
-            border: '1px solid #e2e8f0',
-            height: '40px'
-          }}>
+          <div 
+            onClick={() => navigate('/profile')}
+            style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: '12px',
+              padding: '4px 12px 4px 6px',
+              background: '#f8fafc',
+              borderRadius: '20px',
+              border: '1px solid #e2e8f0',
+              height: '40px',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = '#f1f5f9';
+              e.currentTarget.style.borderColor = '#5B4EF5';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = '#f8fafc';
+              e.currentTarget.style.borderColor = '#e2e8f0';
+            }}
+          >
              <Avatar 
                size={30} 
                style={{ 

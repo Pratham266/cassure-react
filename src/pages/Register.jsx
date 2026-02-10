@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Form, Input, Button, Card, Typography, message } from 'antd';
-import { UserOutlined, LockOutlined, MailOutlined } from '@ant-design/icons';
+import { UserOutlined, LockOutlined, MailOutlined, MobileOutlined } from '@ant-design/icons';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
@@ -102,6 +102,22 @@ const Register = () => {
             <Input 
               prefix={<MailOutlined style={{ color: '#94a3b8' }} />} 
               placeholder="name@company.com" 
+              style={{ borderRadius: '8px', height: '42px' }}
+            />
+          </Form.Item>
+
+          <Form.Item
+            name="mobileNumber"
+            label={<Text strong style={{ fontSize: '13px', color: '#475569' }}>Mobile Number</Text>}
+            rules={[
+              { required: true, message: 'Please input your mobile number!' },
+              { pattern: /^[0-9]{10,12}$/, message: 'Please enter a valid 10-12 digit mobile number!' }
+            ]}
+            style={{ marginBottom: '12px' }}
+          >
+            <Input 
+              prefix={<MobileOutlined style={{ color: '#94a3b8' }} />} 
+              placeholder="9876543210" 
               style={{ borderRadius: '8px', height: '42px' }}
             />
           </Form.Item>

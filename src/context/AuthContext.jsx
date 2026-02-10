@@ -53,8 +53,23 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
+  const updateProfile = async (userData) => {
+    const response = await authAPI.updateProfile(userData);
+    const { user: updatedUser } = response.data;
+    
+    localStorage.setItem('user', JSON.stringify(updatedUser));
+    setUser(updatedUser);
+    
+    return response.data;
+  };
+
+  const deleteAccount = async () => {
+    await authAPI.deleteProfile();
+    logout();
+  };
+
   return (
-    <AuthContext.Provider value={{ user, login, register, logout, loading }}>
+    <AuthContext.Provider value={{ user, login, register, logout, updateProfile, deleteAccount, loading }}>
       {children}
     </AuthContext.Provider>
   );
