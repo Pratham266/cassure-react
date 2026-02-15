@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import SupportBanner from '../components/SupportBanner';
+
 import { Row, Col, Card, Statistic, Typography, Table, Tag, message, Spin, Empty, Space } from 'antd';
 import { 
   HiOutlineDocumentText, 
@@ -15,24 +17,35 @@ const { Title, Text } = Typography;
 
 const Dashboard = () => {
   const [loading, setLoading] = useState(true);
-  const [data, setData] = useState(null);
+  const [data, setData] = useState([]);
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 10,
+    total: 0
+  });
   const [summary, setSummary] = useState({
     totalStatements: 0,
     inaccurateStatements: 0,
     accuracyRate: '0%'
   });
 
-  useEffect(() => {
-    fetchDashboardData();
-  }, []);
 
-  const fetchDashboardData = async () => {
+  useEffect(() => {
+    fetchDashboardData(pagination.current);
+  }, [pagination.current]);
+
+
+  const fetchDashboardData = async (page = 1) => {
     try {
       setLoading(true);
-      const response = await statementAPI.getDashboardStats();
+      const response = await statementAPI.getDashboardStats({ page, limit: pagination.pageSize });
       if (response.data.success) {
         setData(response.data.data);
         setSummary(response.data.summary);
+        setPagination(prev => ({
+          ...prev,
+          total: response.data.pagination.total
+        }));
       }
     } catch (error) {
       console.error('Dashboard fetch error:', error);
@@ -41,6 +54,14 @@ const Dashboard = () => {
       setLoading(false);
     }
   };
+
+  const handleTableChange = (newPagination) => {
+    setPagination(prev => ({
+      ...prev,
+      current: newPagination.current
+    }));
+  };
+
 
   const stats = [
     { 
@@ -99,16 +120,11 @@ const Dashboard = () => {
     }
   ];
 
-  if (loading) {
-    return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh' }}>
-        <Spin size="large" tip="Loading your dashboard..." />
-      </div>
-    );
-  }
-
   return (
+
     <div style={{ padding: '40px 24px' }}>
+      <SupportBanner />
+
       <div style={{ marginBottom: '32px' }}>
         <Title level={2} style={{ margin: 0, fontWeight: 800 }}>Dashboard Overview</Title>
         <Text type="secondary">Real-time statistics of your bank statement processing activity.</Text>
@@ -134,16 +150,23 @@ const Dashboard = () => {
         bordered={false} 
         style={{ borderRadius: '16px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}
       >
-        {data && data.length > 0 ? (
+        {loading || (data && data.length > 0) ? (
           <Table 
             dataSource={data} 
             columns={columns} 
-            pagination={false} 
+            pagination={{
+              ...pagination,
+              showSizeChanger: false,
+              showTotal: (total) => `Total ${total} items`
+            }} 
+            onChange={handleTableChange}
             rowKey="_id"
+            loading={loading}
           />
         ) : (
           <Empty description="No parsing activity found yet. Start by uploading a statement!" />
         )}
+
       </Card>
     </div>
   );

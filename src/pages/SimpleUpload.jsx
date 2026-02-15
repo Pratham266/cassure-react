@@ -1,4 +1,8 @@
 import React, { useState, useContext, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import SupportBanner from '../components/SupportBanner';
+
+
 import { 
   Card, 
   Upload, 
@@ -191,7 +195,9 @@ const EditableCell = ({
 };
 
 const SimpleUpload = () => {
+  const navigate = useNavigate();
   const [uploading, setUploading] = useState(false);
+
   const [uploadProgress, setUploadProgress] = useState(0);
   const [result, setResult] = useState(null);
 
@@ -796,6 +802,8 @@ const SimpleUpload = () => {
           }
         `}
       </style>
+      <SupportBanner />
+
       
       {/* Upload Section - Hidden when results are shown */}
       {!result && (

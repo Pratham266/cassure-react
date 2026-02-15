@@ -55,7 +55,7 @@ export const statementAPI = {
   getAll: (params) => api.get('/statements', { params }),
   getById: (id) => api.get(`/statements/${id}`),
   delete: (id) => api.delete(`/statements/${id}`),
-  getDashboardStats: () => api.get('/simple/stats')
+  getDashboardStats: (params) => api.get('/simple/stats', { params })
 };
 
 // Transaction APIs
